@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 
 
-function RegistroEstudiantes() {
+function RegistroEstudiantes(props) {
+    console.log("TIPO FORM>>" + props.Tipo);
+
+
     const [estudiante, setEstudiante] = useState({
         nombre: "",
         apellido: "",
@@ -30,32 +33,74 @@ function RegistroEstudiantes() {
             !estudiante.correoInstitucional ||
             !estudiante.celular
         ) {
-            alert("Por favor completa todos los campos del formulario");
+            let campoNulo = "NINGUNO";
+            if (!estudiante.nombre) {
+                campoNulo = "NOMBRE";
+            }
+            if (!estudiante.apellido) {
+                campoNulo = "APELLIDO";
+            }
+            if (!estudiante.fechaNacimiento) {
+                campoNulo = "FECHA NACIMIENTO";
+            }
+            if (!estudiante.proyectoCurricular) {
+                campoNulo = "PROYECTO CURRICULAR";
+            }
+            if (!estudiante.codigo) {
+                campoNulo = "CODIGO";
+            }
+            if (!estudiante.documento) {
+                campoNulo = "DOCUMENTO";
+            }
+            if (!estudiante.tipoDocumento) {
+                campoNulo = "TIPO DOCUMENTO";
+            }
+            if (!estudiante.correoPersonal) {
+                campoNulo = "CORREO PERSONAL";
+            }
+            if (!estudiante.correoInstitucional) {
+                campoNulo = "CORREO INSTITUCIONAL";
+            }
+            if (!estudiante.celular) {
+                campoNulo = "CELILAR";
+            }
+
+            alert(`Por favor completa el campo:${campoNulo}  del formulario`);
             return;
         }
 
-        //AGREGAR LA PETICION POST
-        // axios
-        //     .post("https://example.com/api/estudiantes", estudiante)
-        //     .then((response) => {
-        //         alert("Estudiante registrado correctamente");
-        //         // Agrega la lógica para enviar el correo de confirmación aquí
-        //         setEstudiante({
-        //             nombre: "",
-        //             apellido: "",
-        //             fechaNacimiento: "",
-        //             proyectoCurricular: "",
-        //             codigo: "",
-        //             documento: "",
-        //             tipoDocumento: "",
-        //             correoPersonal: "",
-        //             correoInstitucional: "",
-        //             celular: "",
-        //         });
-        //     })
-        //     .catch((error) => {
-        //         alert("Ocurrió un error al registrar al estudiante");
-        //     });
+
+        let data = JSON.stringify({
+            "nombre": estudiante.nombre,
+            "apellido": estudiante.apellido,
+            "fechaNacimiento": estudiante.fechaNacimiento,
+            "proyectoCurricular": estudiante.proyectoCurricular,
+            "codigo": estudiante.codigo,
+            "documento": estudiante.documento,
+            "tipoDocumento": estudiante.tipoDocumento,
+            "correoPersonal": estudiante.correoPersonal,
+            "correoInstitucional": estudiante.correoInstitucional,
+            "celular": estudiante.celular
+        });
+
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'http://localhost:8085/crear',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios.request(config)
+            .then((response) => {
+                console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
     };
 
 
@@ -132,13 +177,15 @@ function RegistroEstudiantes() {
                 </div>
                 <div className="flex flex-row">
                     <label htmlFor="tipoDocumento" className="flex-initial block mb-2 w-36">Tipo Documento:</label>
-                    <select id="tipoDocumento" className="px-3 py-2 mx-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300" data-te-select-init name="tipoDocumento" onChange={(e) =>
+                    <select id="tipoDocumento" className="px-3 py-2 mx-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300" data-te-select-init name="tipoDocumento" onChange={(e) => {
+                        console.log("VALUE SELECT>>"+e.target.value)
                         setEstudiante({ ...estudiante, tipoDocumento: e.target.value })
+                    }
                     }>
-                        <option value="1">CC</option>
-                        <option value="2">NIT</option>
-                        <option value="3">Tarjeta de Identidad</option>
-                        <option value="4">CE</option>
+                        <option value="CC">CC</option>
+                        <option value="NIT">NIT</option>
+                        <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
+                        <option value="CE">CE</option>
                     </select>
                     <label htmlFor="documento" className="block w-32 mb-2">Documento:</label>
                     <input

@@ -25,7 +25,8 @@ function App() {
       </nav>
       <Routes>
         <Route path="/" element={<Home />}/>
-        <Route path="/registro" element={<RegistroEstudiantes />} />
+        <Route path="/registro" element={<RegistroEstudiantes Tipo="INSERT" />} />
+        <Route path="/registro" element={<RegistroEstudiantes Tipo="UPDATE" />} />
         <Route path="/consulta" element={<ConsultaEstudiantes />} />
       </Routes>
     </BrowserRouter>
